@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html class="dark scroll-smooth" lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>World | 次世代クラウド監視プラットフォーム</title>
+<!-- Favicon -->
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+<!-- OG Meta Tags -->
+<meta name="description" content="株式会社3Sが提供する次世代クラウド監視プラットフォーム。WebRTCによる超低遅延リアルタイム映像とクラウド常時録画を統合。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="World | 次世代クラウド監視プラットフォーム">
+<meta property="og:description" content="WebRTCによる超低遅延リアルタイム映像とクラウド常時録画を統合。建設現場から河川監視・防災まで、あらゆる現場の映像をクラウドに常時記録する。">
+<meta property="og:image" content="images/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="World | 次世代クラウド監視プラットフォーム">
+<meta name="twitter:description" content="WebRTCによる超低遅延リアルタイム映像とクラウド常時録画を統合。">
+<meta name="twitter:image" content="images/og-image.jpg">
+<meta name="theme-color" content="#131313">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "secondary": "#b8c4ff",
+          "surface-tint": "#abd600",
+          "surface-variant": "#353535",
+          "on-secondary-fixed": "#001454",
+          "on-primary-fixed": "#161e00",
+          "on-tertiary-fixed": "#410000",
+          "outline-variant": "#444933",
+          "on-error": "#690005",
+          "on-primary": "#283500",
+          "secondary-fixed": "#dde1ff",
+          "on-primary-container": "#556d00",
+          "secondary-fixed-dim": "#b8c4ff",
+          "surface-container-lowest": "#0e0e0e",
+          "tertiary-fixed": "#ffdad4",
+          "outline": "#8e9379",
+          "inverse-primary": "#506600",
+          "surface": "#131313",
+          "tertiary-fixed-dim": "#ffb4a8",
+          "on-tertiary": "#690100",
+          "surface-dim": "#131313",
+          "on-secondary-container": "#d5daff",
+          "on-tertiary-fixed-variant": "#930100",
+          "error": "#ffb4ab",
+          "on-surface": "#e2e2e2",
+          "tertiary-container": "#ffdad4",
+          "primary-fixed-dim": "#abd600",
+          "on-background": "#e2e2e2",
+          "on-tertiary-container": "#cc0100",
+          "on-secondary": "#002486",
+          "surface-container-low": "#1b1b1b",
+          "inverse-on-surface": "#303030",
+          "error-container": "#93000a",
+          "secondary-container": "#004bf9",
+          "surface-container": "#1f1f1f",
+          "inverse-surface": "#e2e2e2",
+          "primary-fixed": "#c3f400",
+          "surface-bright": "#393939",
+          "tertiary": "#ffffff",
+          "on-surface-variant": "#c4c9ac",
+          "surface-container-high": "#2a2a2a",
+          "on-error-container": "#ffdad6",
+          "on-primary-fixed-variant": "#3c4d00",
+          "background": "#131313",
+          "primary": "#ffffff",
+          "primary-container": "#c3f400",
+          "surface-container-highest": "#353535",
+          "on-secondary-fixed-variant": "#0036bb"
+        },
+        fontFamily: {
+          "headline": ["Space Grotesk", "Noto Sans JP", "sans-serif"],
+          "body": ["Inter", "Noto Sans JP", "sans-serif"],
+          "label": ["Inter", "Noto Sans JP", "sans-serif"]
+        },
+        borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+      },
+    },
+  }
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+  }
+  .hud-blur {
+    backdrop-filter: blur(24px);
+    background: rgba(31, 31, 31, 0.6);
+  }
+  .text-glow {
+    text-shadow: 0 0 15px rgba(195, 244, 0, 0.4);
+  }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .ja-tracking { letter-spacing: 0.1em; }
+  h1, h2, h3, blockquote { letter-spacing: -0.05em; }
+  body { font-feature-settings: "palt"; }
+  .scroll-reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .scroll-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .preload-line {
+    opacity: 0;
+    animation: fadeInLine 0.4s ease forwards;
+  }
+  @keyframes fadeInLine {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  body.loading {
+    overflow: hidden;
+  }
+</style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+
+<!-- Preloader -->
+<div id="preloader" class="fixed inset-0 z-[9999] bg-[#0a0a0a] flex flex-col items-center justify-center transition-transform duration-700">
+  <!-- Logo -->
+  <div class="text-5xl font-headline font-black text-white tracking-tighter uppercase mb-12">World</div>
+
+  <!-- HUD Boot Lines -->
+  <div class="font-mono text-[0.7rem] tracking-widest uppercase space-y-3 mb-12 w-72">
+    <div class="preload-line flex justify-between" style="animation-delay: 0.2s">
+      <span class="text-on-surface-variant">> WebRTC Protocol</span>
+      <span class="text-primary-fixed">&#10003;</span>
+    </div>
+    <div class="preload-line flex justify-between" style="animation-delay: 0.6s">
+      <span class="text-on-surface-variant">> Cloud Storage</span>
+      <span class="text-primary-fixed">&#10003;</span>
+    </div>
+    <div class="preload-line flex justify-between" style="animation-delay: 1.0s">
+      <span class="text-on-surface-variant">> Camera Network</span>
+      <span class="text-primary-fixed" id="preload-status">...</span>
+    </div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="w-72 h-[2px] bg-white/10 relative overflow-hidden">
+    <div id="preload-bar" class="absolute inset-y-0 left-0 bg-primary-fixed transition-all duration-300" style="width: 0%"></div>
+  </div>
+  <div class="mt-3 font-mono text-[0.6rem] tracking-[0.3em] text-on-surface-variant uppercase">
+    <span id="preload-percent">0</span>% INITIALIZED
+  </div>
+</div>
+
+<!-- ============================================================
+     1. Nav (from index2.html) — cleanest layout
+     ============================================================ -->
+<nav class="bg-surface/80 backdrop-blur-xl docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
+<a class="text-2xl font-black tracking-tighter text-white hover:text-primary-container transition-colors font-headline uppercase" href="#">World</a>
+<div class="hidden md:flex items-center space-x-8">
+<a class="font-headline font-bold tracking-tighter uppercase text-white/60 hover:text-white transition-colors" href="#models">モデル</a>
+<a class="font-headline font-bold tracking-tighter uppercase text-white/60 hover:text-white transition-colors" href="#environments">環境</a>
+<a class="font-headline font-bold tracking-tighter uppercase text-white/60 hover:text-white transition-colors" href="#tech">テクノロジー</a>
+<a class="font-headline font-bold tracking-tighter uppercase text-white/60 hover:text-white transition-colors" href="#support">サポート</a>
+</div>
+<div class="flex items-center space-x-6">
+<a href="coming-soon.html" class="material-symbols-outlined text-white/60 hover:text-white transition-all">shopping_bag</a>
+<a href="coming-soon.html" class="bg-primary-container text-on-primary-container px-5 py-2 font-headline font-bold text-sm tracking-widest uppercase hover:scale-95 transition-all duration-100 inline-block">お問い合わせ</a>
+</div>
+</div>
+</nav>
+
+<main>
+
+<!-- ============================================================
+     2. Hero (from index2.html) — fullscreen X1 product closeup, sole h1
+     ============================================================ -->
+<section class="relative min-h-screen flex flex-col justify-end overflow-hidden">
+<div class="absolute inset-0 z-0">
+<video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale scale-110">
+  <source src="Industrial_Warehouse_Night_Scene_Generation.mp4" type="video/mp4">
+</video>
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent"></div>
+</div>
+<div class="relative z-10 max-w-screen-2xl mx-auto w-full px-6 pb-24 grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+<div class="lg:col-span-8">
+<span class="font-headline text-primary-fixed tracking-[0.4em] text-xs uppercase mb-4 block">CLOUD_PLATFORM // 株式会社3S</span>
+<h1 class="font-headline text-7xl md:text-9xl font-black tracking-tighter text-white leading-[0.85] uppercase mb-8">
+  World <span class="text-primary-fixed italic">視界</span>
+</h1>
+<p class="max-w-xl text-lg text-on-surface-variant font-medium leading-relaxed mb-12 border-l-2 border-primary-fixed pl-6">
+  WebRTCによる超低遅延リアルタイム映像と、クラウド常時録画を統合。現場の「今」を逃さず、すべての瞬間をAWS S3に刻む次世代クラウド監視プラットフォーム。
+</p>
+<div class="flex flex-wrap gap-4">
+<a href="coming-soon.html" class="bg-primary-container text-on-primary-container px-8 py-4 font-headline font-black text-lg tracking-wider uppercase hover:scale-95 transition-all inline-block">無料トライアル</a>
+<a href="coming-soon.html" class="bg-surface-container-highest text-white px-8 py-4 font-headline font-black text-lg tracking-wider uppercase hover:bg-white hover:text-black transition-all inline-block">プラン詳細</a>
+</div>
+</div>
+<div class="lg:col-span-4 flex flex-col gap-4">
+<div class="hud-blur border-l-2 border-primary-fixed p-6">
+<span class="font-headline text-[10px] tracking-widest text-primary-fixed uppercase block mb-2">クラウド接続状況</span>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-fixed text-sm" style="font-variation-settings: 'FILL' 1;">cloud_done</span>
+<span class="font-label text-sm uppercase tracking-tighter font-bold">WebRTC // ライブ配信中</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ============================================================
+     3. Tech Callouts (from index2.html) — 01/02/03 numbered features
+     ============================================================ -->
+<section class="bg-surface-container-low py-32 px-6">
+<div class="max-w-screen-2xl mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+<!-- Callout 1 -->
+<div class="relative group">
+<div class="absolute -top-4 -left-4 text-primary-fixed/20 font-headline text-8xl font-black">01</div>
+<div class="relative z-10 pt-12">
+<h3 class="font-headline text-2xl font-bold uppercase tracking-tighter text-white mb-4">WebRTC リアルタイム映像</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6 font-medium">WebRTCプロトコルによる超低遅延ライブ配信。現場の「今」を50ms以下のレイテンシで手元に届ける。遠隔地でも、まるでその場にいるかのような臨場感。</p>
+<div class="h-1 w-12 bg-primary-fixed group-hover:w-full transition-all duration-500"></div>
+</div>
+</div>
+<!-- Callout 2 -->
+<div class="relative group mt-12 md:mt-0">
+<div class="absolute -top-4 -left-4 text-primary-fixed/20 font-headline text-8xl font-black">02</div>
+<div class="relative z-10 pt-12">
+<h3 class="font-headline text-2xl font-bold uppercase tracking-tighter text-white mb-4">360° 魚眼 De-warp</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6 font-medium">360度魚眼レンズの歪みをソフトウェアで補正。仮想PTZと分割画面で、1台のカメラが複数台分の視野を実現。死角という概念を過去にする。</p>
+<div class="h-1 w-12 bg-primary-fixed group-hover:w-full transition-all duration-500"></div>
+</div>
+</div>
+<!-- Callout 3 -->
+<div class="relative group mt-12 lg:mt-0">
+<div class="absolute -top-4 -left-4 text-primary-fixed/20 font-headline text-8xl font-black">03</div>
+<div class="relative z-10 pt-12">
+<h3 class="font-headline text-2xl font-bold uppercase tracking-tighter text-white mb-4">H.265 クラウド常時録画</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6 font-medium">H.265高圧縮エンコーディングとAWS S3クラウドストレージの融合。24時間365日の常時録画を、帯域とコストを極限まで削ぎ落として実現する。</p>
+<div class="h-1 w-12 bg-primary-fixed group-hover:w-full transition-all duration-500"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ============================================================
+     4. Product Grid (from index.html) — 3 product cards with HUD overlay
+     ============================================================ -->
+<section id="models" class="px-6 pt-24 pb-12 max-w-screen-2xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end gap-8 mb-20">
+<div class="max-w-4xl">
+<span class="text-primary-container font-headline font-bold tracking-[0.2em] text-xs uppercase mb-4 block">CLOUD CAMERA LINEUP</span>
+<h2 class="text-5xl md:text-7xl font-headline font-black leading-[0.85] tracking-tighter uppercase mb-8">
+  World<br/><span class="text-white/20">Cloud</span><br/>Cameras.
+</h2>
+</div>
+<div class="md:text-right max-w-xs pb-4">
+<p class="text-on-surface-variant text-sm font-medium leading-relaxed mb-6 ja-tracking">
+  Worldクラウドプラットフォームと完全統合。建設現場から河川監視・防災まで、あらゆる現場の映像をクラウドに常時記録する。
+</p>
+<div class="flex gap-4 md:justify-end">
+<div class="h-12 w-px bg-outline-variant opacity-20"></div>
+<span class="font-headline font-bold text-4xl text-white">03</span>
+<span class="text-xs font-bold uppercase tracking-widest text-primary-container self-end pb-1">コアユニット</span>
+</div>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="flex flex-wrap gap-4 border-b border-outline-variant/20 pb-8 mb-16">
+<button data-filter="all" class="px-8 py-2 bg-primary-container text-on-primary-fixed font-headline font-bold uppercase tracking-widest text-[0.7rem]">全モデル</button>
+<button data-filter="construction" class="px-8 py-2 bg-surface-container-low text-on-surface-variant hover:text-white transition-colors font-headline font-bold uppercase tracking-widest text-[0.7rem]">建設現場</button>
+<button data-filter="agriculture" class="px-8 py-2 bg-surface-container-low text-on-surface-variant hover:text-white transition-colors font-headline font-bold uppercase tracking-widest text-[0.7rem]">畜産・農業</button>
+<button data-filter="indoor" class="px-8 py-2 bg-surface-container-low text-on-surface-variant hover:text-white transition-colors font-headline font-bold uppercase tracking-widest text-[0.7rem]">屋内・施設</button>
+</div>
+<!-- Product Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+<!-- Product 1: Sentinel X1 Cloud -->
+<div class="group relative" data-category="indoor">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low relative">
+<img class="w-full h-full object-cover grayscale brightness-75 group-hover:scale-105 transition-transform duration-700" alt="High-end industrial dome security camera with matte black finish and carbon fiber accents" src="images/product-sentinel-x1.jpg"/>
+<!-- Overlay HUD -->
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm p-8 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div class="bg-white/10 backdrop-blur-xl px-3 py-1 border border-white/20">
+<span class="text-[0.6rem] font-bold text-white tracking-widest uppercase">クラウド: 録画中</span>
+</div>
+<span class="material-symbols-outlined text-primary-container">cloud_upload</span>
+</div>
+<div class="space-y-4">
+<div class="grid grid-cols-2 gap-4">
+<div class="border-l border-primary-container pl-3">
+<p class="text-[0.6rem] text-white/40 uppercase font-bold tracking-widest">録画方式</p>
+<p class="text-sm font-headline font-bold text-white">クラウド常時録画</p>
+</div>
+<div class="border-l border-primary-container pl-3">
+<p class="text-[0.6rem] text-white/40 uppercase font-bold tracking-widest">ストレージ</p>
+<p class="text-sm font-headline font-bold text-white">AWS S3 無制限</p>
+</div>
+</div>
+<a href="coming-soon.html" class="w-full inline-block bg-white text-black py-4 font-headline font-bold uppercase tracking-widest text-xs hover:bg-primary-container transition-colors text-center">このモデルを見る</a>
+</div>
+</div>
+<!-- Static Label -->
+<div class="absolute top-6 left-6 flex items-center gap-2">
+<span class="w-2 h-2 bg-primary-container rounded-full animate-pulse"></span>
+<span class="text-[0.6rem] font-bold uppercase tracking-widest text-white/60">Cloud Recording</span>
+</div>
+</div>
+<div class="mt-6 flex justify-between items-start">
+<div>
+<h3 class="text-3xl font-headline font-black tracking-tighter uppercase mb-1">Sentinel X1</h3>
+<p class="text-xs font-bold text-white/40 uppercase tracking-widest">クラウド常時録画 // Cloudプラン</p>
+</div>
+<span class="text-xs tracking-widest uppercase font-bold text-primary-container">お問い合わせ</span>
+</div>
+</div>
+<!-- Product 2: Construct B2 Site -->
+<div class="group relative" data-category="construction">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low relative">
+<img class="w-full h-full object-cover grayscale brightness-75 group-hover:scale-105 transition-transform duration-700" alt="Rugged industrial bullet camera with reinforced steel casing and sun shield" src="images/product-construct-b2.jpg"/>
+<!-- Overlay HUD -->
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm p-8 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div class="bg-white/10 backdrop-blur-xl px-3 py-1 border border-white/20">
+<span class="text-[0.6rem] font-bold text-white tracking-widest uppercase">SIM内蔵: 接続中</span>
+</div>
+<span class="material-symbols-outlined text-primary-container">construction</span>
+</div>
+<div class="space-y-4">
+<div class="grid grid-cols-2 gap-4">
+<div class="border-l border-primary-container pl-3">
+<p class="text-[0.6rem] text-white/40 uppercase font-bold tracking-widest">設置</p>
+<p class="text-sm font-headline font-bold text-white">工事不要 即日稼働</p>
+</div>
+<div class="border-l border-primary-container pl-3">
+<p class="text-[0.6rem] text-white/40 uppercase font-bold tracking-widest">接続</p>
+<p class="text-sm font-headline font-bold text-white">LTE/4G SIM内蔵</p>
+</div>
+</div>
+<a href="coming-soon.html" class="w-full inline-block bg-white text-black py-4 font-headline font-bold uppercase tracking-widest text-xs hover:bg-primary-container transition-colors text-center">このモデルを見る</a>
+</div>
+</div>
+<!-- Static Label -->
+<div class="absolute top-6 left-6 flex items-center gap-2">
+<span class="w-2 h-2 bg-on-surface-variant/40 rounded-full"></span>
+<span class="text-[0.6rem] font-bold uppercase tracking-widest text-white/60">Site Ready</span>
+</div>
+</div>
+<div class="mt-6 flex justify-between items-start">
+<div>
+<h3 class="text-3xl font-headline font-black tracking-tighter uppercase mb-1">Construct B2</h3>
+<p class="text-xs font-bold text-white/40 uppercase tracking-widest">建設現場専用 // SIM内蔵モデル</p>
+</div>
+<span class="text-xs tracking-widest uppercase font-bold text-primary-container">お問い合わせ</span>
+</div>
+</div>
+<!-- Product 3: Guardian T1 Fisheye -->
+<div class="group relative" data-category="agriculture">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low relative">
+<img class="w-full h-full object-cover grayscale brightness-75 group-hover:scale-105 transition-transform duration-700" alt="Advanced dual-lens thermal surveillance camera with matte graphite finish" src="images/product-guardian-t1.jpg"/>
+<!-- Overlay HUD -->
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm p-8 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div class="bg-white/10 backdrop-blur-xl px-3 py-1 border border-white/20">
+<span class="text-[0.6rem] font-bold text-white tracking-widest uppercase">De-warp: 有効</span>
+</div>
+<span class="material-symbols-outlined text-primary-container">panorama_fish_eye</span>
+</div>
+<div class="space-y-4">
+<div class="grid grid-cols-2 gap-4">
+<div class="border-l border-primary-container pl-3">
+<p class="text-[0.6rem] text-white/40 uppercase font-bold tracking-widest">視野角</p>
+<p class="text-sm font-headline font-bold text-white">360° 全方位</p>
+</div>
+<div class="border-l border-primary-container pl-3">
+<p class="text-[0.6rem] text-white/40 uppercase font-bold tracking-widest">機能</p>
+<p class="text-sm font-headline font-bold text-white">仮想PTZ + 分割</p>
+</div>
+</div>
+<a href="coming-soon.html" class="w-full inline-block bg-white text-black py-4 font-headline font-bold uppercase tracking-widest text-xs hover:bg-primary-container transition-colors text-center">このモデルを見る</a>
+</div>
+</div>
+<!-- Static Label -->
+<div class="absolute top-6 left-6 flex items-center gap-2">
+<span class="w-2 h-2 bg-on-surface-variant/40 rounded-full"></span>
+<span class="text-[0.6rem] font-bold uppercase tracking-widest text-white/60">Fisheye 360</span>
+</div>
+</div>
+<div class="mt-6 flex justify-between items-start">
+<div>
+<h3 class="text-3xl font-headline font-black tracking-tighter uppercase mb-1">Guardian T1</h3>
+<p class="text-xs font-bold text-white/40 uppercase tracking-widest">360° 魚眼 De-warp モデル</p>
+</div>
+<span class="text-xs tracking-widest uppercase font-bold text-primary-container">お問い合わせ</span>
+</div>
+</div>
+</div>
+<!-- Showcase Panels -->
+<div id="showcase-construction" class="hidden transition-opacity duration-300 opacity-0">
+<div class="flex flex-col md:flex-row items-stretch gap-0">
+<div class="w-full md:w-1/2">
+<div class="aspect-[4/3] overflow-hidden">
+<img class="w-full h-full object-cover grayscale brightness-90" alt="Construction site with surveillance camera monitoring progress" src="images/tab-construction.jpg"/>
+</div>
+</div>
+<div class="hidden md:block w-px bg-white/20 self-stretch"></div>
+<div class="w-full md:w-1/2 flex flex-col justify-center p-8 md:p-12">
+<h3 class="text-3xl md:text-4xl font-headline font-black tracking-tighter uppercase mb-6 leading-tight">建設現場の「今」を、<br/>遠隔で掌握する</h3>
+<p class="text-on-surface-variant text-sm font-medium leading-relaxed mb-8 ja-tracking">SIM内蔵カメラで工事不要。設置したその日からクラウド常時録画が稼働。夜間の資材盗難防止と施工進捗の遠隔確認を同時に実現します。</p>
+<ul class="space-y-4 mb-10">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container text-xl mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm text-on-surface-variant font-medium"><strong class="text-white">SIM内蔵</strong> — 電源さえあれば即日稼働</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container text-xl mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm text-on-surface-variant font-medium"><strong class="text-white">動体検知アラート</strong> — 夜間侵入を即座に通知</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container text-xl mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm text-on-surface-variant font-medium"><strong class="text-white">タイムラプス</strong> — 施工進捗を自動記録</span>
+</li>
+</ul>
+<a href="coming-soon.html" class="inline-block bg-primary-container text-on-primary-container px-8 py-4 font-headline font-bold text-sm tracking-widest uppercase hover:scale-95 transition-all duration-100 text-center">詳しく見る</a>
+</div>
+</div>
+</div>
+<div id="showcase-agriculture" class="hidden transition-opacity duration-300 opacity-0">
+<div class="flex flex-col md:flex-row items-stretch gap-0">
+<div class="w-full md:w-1/2">
+<div class="aspect-[4/3] overflow-hidden">
+<img class="w-full h-full object-cover grayscale brightness-90" alt="Agricultural field with solar-powered surveillance camera" src="images/tab-agriculture.jpg"/>
+</div>
+</div>
+<div class="hidden md:block w-px bg-white/20 self-stretch"></div>
+<div class="w-full md:w-1/2 flex flex-col justify-center p-8 md:p-12">
+<h3 class="text-3xl md:text-4xl font-headline font-black tracking-tighter uppercase mb-6 leading-tight">広大な農地を、<br/>1台で見守る</h3>
+<p class="text-on-surface-variant text-sm font-medium leading-relaxed mb-8 ja-tracking">ソーラー給電とLTE通信で、電源もネットもない場所に設置可能。灌漑水路の水位監視や、圃場の生育状況確認をクラウドから24時間体制で。</p>
+<ul class="space-y-4 mb-10">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container text-xl mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm text-on-surface-variant font-medium"><strong class="text-white">ソーラー給電</strong> — 商用電源不要</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container text-xl mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm text-on-surface-variant font-medium"><strong class="text-white">気象センサー連動</strong> — 温湿度・風速を同時記録</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container text-xl mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm text-on-surface-variant font-medium"><strong class="text-white">AI動体検知</strong> — 獣害・不審者を即座にアラート</span>
+</li>
+</ul>
+<a href="coming-soon.html" class="inline-block bg-primary-container text-on-primary-container px-8 py-4 font-headline font-bold text-sm tracking-widest uppercase hover:scale-95 transition-all duration-100 text-center">詳しく見る</a>
+</div>
+</div>
+</div>
+<div id="showcase-indoor" class="hidden transition-opacity duration-300 opacity-0">
+<div class="flex flex-col md:flex-row items-stretch gap-0">
+<div class="w-full md:w-1/2">
+<div class="aspect-[4/3] overflow-hidden">
+<img class="w-full h-full object-cover grayscale brightness-90" alt="Indoor facility with 360-degree fisheye surveillance camera" src="images/tab-indoor.jpg"/>
+</div>
+</div>
+<div class="hidden md:block w-px bg-white/20 self-stretch"></div>
+<div class="w-full md:w-1/2 flex flex-col justify-center p-8 md:p-12">
+<h3 class="text-3xl md:text-4xl font-headline font-black tracking-tighter uppercase mb-6 leading-tight">施設全域を、<br/>死角なく統制する</h3>
+<p class="text-on-surface-variant text-sm font-medium leading-relaxed mb-8 ja-tracking">360°魚眼カメラのDe-warp機能で、1台で通路全体をカバー。冷凍倉庫から物流センターまで、温度管理が必要な環境でもIP67防水で安心。</p>
+<ul class="space-y-4 mb-10">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container text-xl mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm text-on-surface-variant font-medium"><strong class="text-white">360° De-warp</strong> — 仮想PTZで死角ゼロ</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container text-xl mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm text-on-surface-variant font-medium"><strong class="text-white">IP67防水</strong> — 冷凍庫・高湿度環境対応</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container text-xl mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm text-on-surface-variant font-medium"><strong class="text-white">多層権限管理</strong> — 部門ごとに閲覧範囲を制御</span>
+</li>
+</ul>
+<a href="coming-soon.html" class="inline-block bg-primary-container text-on-primary-container px-8 py-4 font-headline font-bold text-sm tracking-widest uppercase hover:scale-95 transition-all duration-100 text-center">詳しく見る</a>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ============================================================
+     5. Environment: Construction (from index3.html) — "Built for the Concrete Jungle"
+     ============================================================ -->
+<section id="environments" class="relative min-h-screen flex flex-col justify-end overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover grayscale contrast-125 brightness-75" alt="Cinematic low angle shot of a massive concrete construction site at blue hour" src="images/env-construction.jpg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-90"></div>
+</div>
+<!-- Site HUD Overlay -->
+<div class="absolute top-32 right-8 z-20 hidden lg:block">
+<div class="bg-surface-container/50 backdrop-blur-xl p-4 border-l-2 border-primary-container">
+<div class="flex flex-col gap-1 font-mono text-[0.65rem] tracking-widest text-on-surface-variant uppercase">
+<div class="flex justify-between gap-8"><span>緯度:</span> <span class="text-primary-container">40.7128° N</span></div>
+<div class="flex justify-between gap-8"><span>経度:</span> <span class="text-primary-container">74.0060° W</span></div>
+<div class="flex justify-between gap-8"><span>カメラ:</span> <span>NODE_S1_CONCRETE</span></div>
+<div class="flex justify-between gap-8"><span>FPS:</span> <span>60.00</span></div>
+</div>
+</div>
+</div>
+<div class="relative z-10 px-8 pb-20 max-w-screen-2xl mx-auto w-full">
+<span class="label-md tracking-[0.3em] uppercase text-primary-container font-bold mb-4 block">Deployment 01 // 都市インフラ</span>
+<h2 class="font-headline font-black text-6xl md:text-9xl tracking-tighter leading-[0.8] mb-8 uppercase max-w-4xl">
+  Built for the <br/>
+  <span class="text-transparent" style="-webkit-text-stroke: 1px white;">CONCRETE</span> <br/>
+  Jungle
+</h2>
+</div>
+</section>
+
+<!-- ============================================================
+     6. Product Close-up (from index3.html) — "姿なき監視者"
+     ============================================================ -->
+<section class="bg-surface py-32 px-8">
+<div class="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+<div class="md:col-span-5 order-2 md:order-1">
+<h2 class="font-headline font-bold text-4xl mb-6 tracking-tighter uppercase">姿なき監視者</h2>
+<p class="text-on-surface-variant mb-12 max-w-sm leading-relaxed">
+  World Manager（CMS）とWorld Viewer（VMS）のアーキテクチャ分離。管理と閲覧を完全に独立させることで、数千台規模のカメラ運用でも軽快なパフォーマンスを維持する。
+</p>
+<div class="space-y-4">
+<div class="bg-surface-container-low p-6 flex items-center gap-6">
+<div class="text-primary-container font-headline font-black text-3xl">01</div>
+<div>
+<h4 class="font-bold uppercase tracking-tight text-sm">World Manager (CMS)</h4>
+<p class="text-xs text-on-surface-variant">デバイス登録・権限管理・多層組織構造を一元制御。</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 flex items-center gap-6">
+<div class="text-primary-container font-headline font-black text-3xl">02</div>
+<div>
+<h4 class="font-bold uppercase tracking-tight text-sm">World Viewer (VMS)</h4>
+<p class="text-xs text-on-surface-variant">ライブ映像・録画再生・クリップ切り出しをブラウザ上で完結。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="md:col-span-7 order-1 md:order-2">
+<div class="aspect-square bg-surface-container-low relative flex items-center justify-center overflow-hidden">
+<video autoplay muted loop playsinline class="w-full h-full object-cover">
+  <source src="Industrial_Camera_Product_Video.mp4" type="video/mp4">
+</video>
+<div class="absolute bottom-4 left-4">
+<div class="bg-surface-container/60 backdrop-blur-md px-3 py-1 text-[10px] tracking-widest uppercase font-bold text-primary-container border border-primary-container/20">
+  Platform: World CMS + VMS
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ============================================================
+     7. Environment: Agriculture (from index3.html) — "Protecting the Herd"
+     ============================================================ -->
+<section class="relative min-h-screen flex flex-col justify-end overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover brightness-50 grayscale-[0.2]" alt="Wide cinematic shot of a modern agricultural barn at sunrise" src="images/env-agriculture.jpg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-90"></div>
+</div>
+<div class="relative z-10 px-8 pb-20 max-w-screen-2xl mx-auto w-full text-right">
+<span class="label-md tracking-[0.3em] uppercase text-primary-container font-bold mb-4 block">Deployment 02 // 河川監視・防災</span>
+<h2 class="font-headline font-black text-6xl md:text-9xl tracking-tighter leading-[0.8] mb-8 uppercase max-w-4xl ml-auto">
+  Guarding <br/>
+  <span class="text-transparent" style="-webkit-text-stroke: 1px white;">THE</span> <br/>
+  FLOW
+</h2>
+</div>
+</section>
+
+<!-- ============================================================
+     8. Technical Bento (from index3.html) — bento grid specs
+     ============================================================ -->
+<section id="tech" class="bg-background py-32 px-8 relative overflow-hidden">
+<div class="absolute inset-0 z-0">
+<video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover opacity-30 grayscale">
+  <source src="Surveillance_Data_Stream_Visualization.mp4" type="video/mp4">
+</video>
+<div class="absolute inset-0 bg-gradient-to-b from-background via-background/70 to-background"></div>
+</div>
+<div class="max-w-screen-2xl mx-auto relative z-10">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="md:col-span-2 md:row-span-2 bg-surface-container-low p-12 flex flex-col justify-between group overflow-hidden relative">
+<div class="relative z-10">
+<h3 class="font-headline font-black text-5xl mb-4 tracking-tighter uppercase leading-none text-white">複数プラン <br/> 対応</h3>
+<p class="text-on-surface-variant max-w-xs uppercase text-[0.7rem] tracking-widest font-bold">Cloudプランで常時録画、OnlyWatchプランでSD録画。現場に最適なプランを選択。</p>
+</div>
+<div class="mt-20 relative z-10">
+<span class="text-8xl font-black text-white/5 absolute -bottom-10 -left-6 pointer-events-none uppercase font-headline">CLOUD</span>
+<a href="coming-soon.html" class="text-primary-container font-headline font-bold text-sm tracking-widest uppercase flex items-center gap-2 group-hover:gap-4 transition-all">
+  プラン比較を表示 <span class="material-symbols-outlined">trending_flat</span>
+</a>
+</div>
+</div>
+<div class="bg-surface-container-highest p-8 flex flex-col justify-between">
+<span class="material-symbols-outlined text-primary-container text-3xl">wifi_tethering</span>
+<div>
+<h4 class="font-bold uppercase text-xs tracking-[0.2em] mb-2 text-white/40">接続性</h4>
+<p class="font-headline font-bold text-xl uppercase">WebRTC + HLS デュアル</p>
+</div>
+</div>
+<div class="bg-surface-container-highest p-8 flex flex-col justify-between">
+<span class="material-symbols-outlined text-primary-container text-3xl">psychology</span>
+<div>
+<h4 class="font-bold uppercase text-xs tracking-[0.2em] mb-2 text-white/40">インテリジェンス</h4>
+<p class="font-headline font-bold text-xl uppercase">動体検知 + クリップ切り出し</p>
+</div>
+</div>
+<div class="md:col-span-2 bg-surface-container p-8 flex items-center justify-between border-t border-primary-container/20">
+<div>
+<h4 class="font-bold uppercase text-sm tracking-[0.2em] mb-1">B2B OEM ホワイトラベル</h4>
+<p class="text-on-surface-variant text-xs">マルチテナント対応。パートナー企業のブランドで展開可能。</p>
+</div>
+<span class="material-symbols-outlined text-4xl opacity-20">public</span>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ============================================================
+     9. Technical Excellence (from index.html) — "死角ゼロ。ダウンタイムゼロ。" stats
+     ============================================================ -->
+<section class="bg-surface-container-low py-32">
+<div class="max-w-screen-2xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+<div>
+<h2 class="text-5xl md:text-7xl font-headline font-black tracking-tighter uppercase mb-8 leading-tight">死角ゼロ。<br/>ダウンタイムゼロ。</h2>
+<p class="text-on-surface-variant text-lg max-w-lg mb-12 font-medium ja-tracking">
+  WebRTCによる超低遅延ライブ配信と、AWS S3基盤のクラウド常時録画。MediaMTXメディアサーバーが映像の取得・変換・配信をシームレスに処理し、99.9%の可用性を維持する。
+</p>
+<div class="grid grid-cols-2 gap-12 border-t border-outline-variant/20 pt-12">
+<div>
+<p class="font-headline font-black text-4xl mb-2" data-count="99.9" data-suffix="%">0%</p>
+<p class="text-xs font-bold uppercase tracking-[0.2em] text-white/40">クラウド可用性</p>
+</div>
+<div>
+<p class="font-headline font-black text-4xl mb-2" data-count="50" data-prefix="< " data-suffix="ms">0ms</p>
+<p class="text-xs font-bold uppercase tracking-[0.2em] text-white/40">WebRTC レイテンシ</p>
+</div>
+</div>
+</div>
+<div class="relative">
+<div class="aspect-video bg-surface overflow-hidden">
+<img class="w-full h-full object-cover grayscale opacity-60" alt="Industrial command center showing multiple surveillance feeds with AI heatmaps" src="images/command-center.jpg"/>
+</div>
+<!-- HUD Overlay on Image -->
+<div class="absolute top-4 right-4 bg-surface-container/60 backdrop-blur-xl p-4 border border-outline-variant/20">
+<div class="flex gap-4 items-center mb-2">
+<span class="w-3 h-3 bg-red-600 rounded-full animate-pulse"></span>
+<span class="font-headline font-bold text-xs uppercase tracking-widest text-white">ライブフィード: UNIT_04</span>
+</div>
+<div class="text-[0.6rem] text-white/60 font-mono uppercase">
+  座標: 34.0522 N, 118.2437 W<br/>
+  温度: 22°C | 湿度: 45%<br/>
+  ステータス: AI_SCAN_ACTIVE
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ============================================================
+     10. Testimonial (from index2.html) — quote on yellow background
+     ============================================================ -->
+<section class="py-40 bg-primary-container text-on-primary-container overflow-hidden relative">
+<div class="absolute -right-20 top-0 text-[20rem] font-headline font-black text-on-primary-container/5 leading-none select-none">World</div>
+<div class="max-w-4xl mx-auto px-6 relative z-10">
+<span class="material-symbols-outlined text-6xl mb-8" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+<blockquote class="font-headline text-4xl md:text-6xl font-black tracking-tighter uppercase leading-[0.95] mb-12">
+  「家に誰もいない隙を狙って飼料を盗み食いしようとすると、98.7%の確率で捕まる。このカメラ、マジで死角がない。諦めてソファで寝ることにした。」
+</blockquote>
+<div class="flex items-center gap-6">
+<img src="images/tempura.jpg" alt="テンプラ" class="w-16 h-16 rounded-full object-cover border-2 border-on-primary-container/30">
+<div>
+<p class="font-headline text-xl font-bold uppercase tracking-tighter">テンプラ</p>
+<p class="font-label text-sm uppercase tracking-widest opacity-70 font-bold">フレンチブルドッグ 飼料セキュリティ検証担当</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ============================================================
+     11. Product Gallery (from index2.html) — 4-cell bento grid
+     ============================================================ -->
+<section class="py-32 px-6 max-w-screen-2xl mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-4 h-auto md:h-[800px]">
+<div class="md:col-span-2 md:row-span-2 relative group overflow-hidden h-[400px] md:h-full">
+<img alt="X1 詳細" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="images/gallery-x1-detail.jpg"/>
+<div class="absolute bottom-6 left-6 hud-blur px-4 py-2 border-l-2 border-primary-fixed">
+<span class="font-headline text-xs text-primary-fixed uppercase font-bold">外装ケーシング</span>
+</div>
+</div>
+<div class="md:col-span-2 relative group overflow-hidden h-[300px] md:h-full">
+<img alt="内部テクノロジー" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="images/gallery-ai-core.jpg"/>
+<div class="absolute bottom-6 left-6 hud-blur px-4 py-2 border-l-2 border-primary-fixed">
+<span class="font-headline text-xs text-primary-fixed uppercase font-bold">AIコア統合システム</span>
+</div>
+</div>
+<div class="relative group overflow-hidden h-[300px] md:h-full">
+<img alt="ネットワーク" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="images/gallery-network.jpg"/>
+<div class="absolute bottom-6 left-6 hud-blur px-4 py-2 border-l-2 border-primary-fixed">
+<span class="font-headline text-xs text-primary-fixed uppercase font-bold">メッシュネットワーク</span>
+</div>
+</div>
+<div class="relative group overflow-hidden h-[300px] md:h-full">
+<img alt="防水性能" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="images/gallery-waterproof.jpg"/>
+<div class="absolute bottom-6 left-6 hud-blur px-4 py-2 border-l-2 border-primary-fixed">
+<span class="font-headline text-xs text-primary-fixed uppercase font-bold">IP67 完全防水</span>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ============================================================
+     12. CTA (from index3.html) — "Upgrade Your Perspective"
+     ============================================================ -->
+<section class="py-40 px-8 text-center bg-surface relative overflow-hidden">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-primary-container/30 to-transparent"></div>
+<div class="max-w-4xl mx-auto relative z-10">
+<h2 class="font-headline font-black text-5xl md:text-8xl tracking-tighter uppercase mb-12 leading-none">
+  Experience <br/> World Platform
+</h2>
+<div class="flex flex-wrap justify-center gap-6">
+<a href="coming-soon.html" class="bg-primary-container text-on-primary-container px-10 py-5 font-headline font-black text-lg uppercase tracking-tighter hover:scale-105 transition-transform inline-block">
+  無料トライアルを開始
+</a>
+<a href="coming-soon.html" class="border border-white/20 text-white px-10 py-5 font-headline font-black text-lg uppercase tracking-tighter hover:bg-white hover:text-black transition-colors inline-block">
+  資料ダウンロード
+</a>
+</div>
+</div>
+</section>
+
+</main>
+
+<!-- ============================================================
+     13. Footer (from index.html) — 4-column version
+     ============================================================ -->
+<footer id="support" class="bg-surface full-width relative border-t border-white/10">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 px-8 py-20 max-w-screen-2xl mx-auto">
+<div class="lg:col-span-1">
+<div class="text-4xl font-black text-white mb-8 font-headline tracking-tighter uppercase">World</div>
+<p class="text-white/40 font-body text-[0.75rem] tracking-widest uppercase leading-relaxed max-w-xs">
+  株式会社3Sが提供する次世代クラウド監視プラットフォーム。WebRTC + クラウド常時録画の融合。
+</p>
+</div>
+<div class="space-y-4">
+<h4 class="text-primary-container font-headline font-bold uppercase tracking-widest text-xs mb-6">製品情報</h4>
+<ul class="space-y-3">
+<li><a class="text-white/40 hover:text-white transition-colors hover:underline decoration-2 underline-offset-4 font-body text-[0.75rem] tracking-widest uppercase" href="#models">モデル</a></li>
+<li><a class="text-white/40 hover:text-white transition-colors hover:underline decoration-2 underline-offset-4 font-body text-[0.75rem] tracking-widest uppercase" href="#environments">導入環境</a></li>
+<li><a class="text-white/40 hover:text-white transition-colors hover:underline decoration-2 underline-offset-4 font-body text-[0.75rem] tracking-widest uppercase" href="#tech">テクノロジー</a></li>
+<li><a class="text-white/40 hover:text-white transition-colors hover:underline decoration-2 underline-offset-4 font-body text-[0.75rem] tracking-widest uppercase" href="coming-soon.html">エンタープライズ</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h4 class="text-primary-container font-headline font-bold uppercase tracking-widest text-xs mb-6">サポート</h4>
+<ul class="space-y-3">
+<li><a class="text-white/40 hover:text-white transition-colors hover:underline decoration-2 underline-offset-4 font-body text-[0.75rem] tracking-widest uppercase" href="coming-soon.html">インストールガイド</a></li>
+<li><a class="text-white/40 hover:text-white transition-colors hover:underline decoration-2 underline-offset-4 font-body text-[0.75rem] tracking-widest uppercase" href="coming-soon.html">販売担当へ連絡</a></li>
+<li><a class="text-white/40 hover:text-white transition-colors hover:underline decoration-2 underline-offset-4 font-body text-[0.75rem] tracking-widest uppercase" href="coming-soon.html">プライバシーポリシー</a></li>
+<li><a class="text-white/40 hover:text-white transition-colors hover:underline decoration-2 underline-offset-4 font-body text-[0.75rem] tracking-widest uppercase" href="coming-soon.html">利用規約</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h4 class="text-primary-container font-headline font-bold uppercase tracking-widest text-xs mb-6">接続</h4>
+<ul class="space-y-3">
+<li><a class="text-white/40 hover:text-white transition-colors hover:underline decoration-2 underline-offset-4 font-body text-[0.75rem] tracking-widest uppercase" href="coming-soon.html">Instagram</a></li>
+<li><a class="text-white/40 hover:text-white transition-colors hover:underline decoration-2 underline-offset-4 font-body text-[0.75rem] tracking-widest uppercase" href="coming-soon.html">LinkedIn</a></li>
+<li><a class="text-white/40 hover:text-white transition-colors hover:underline decoration-2 underline-offset-4 font-body text-[0.75rem] tracking-widest uppercase" href="coming-soon.html">X / Twitter</a></li>
+</ul>
+</div>
+</div>
+<div class="px-8 pb-12 max-w-screen-2xl mx-auto border-t border-white/5 pt-8">
+<p class="text-white/40 font-body text-[0.65rem] tracking-widest uppercase">
+  ©2025 株式会社3S. ALL RIGHTS RESERVED. POWERED BY WORLD PLATFORM.
+</p>
+</div>
+</footer>
+
+<script>
+(function () {
+  var buttons = document.querySelectorAll('[data-filter]');
+  var productGrid = document.querySelector('#models .grid');
+  var showcases = {
+    construction: document.getElementById('showcase-construction'),
+    agriculture: document.getElementById('showcase-agriculture'),
+    indoor: document.getElementById('showcase-indoor')
+  };
+
+  var activeClasses = ['bg-primary-container', 'text-on-primary-fixed'];
+  var inactiveClasses = ['bg-surface-container-low', 'text-on-surface-variant', 'hover:text-white', 'transition-colors'];
+
+  function hideAll() {
+    productGrid.style.opacity = '0';
+    setTimeout(function () { productGrid.classList.add('hidden'); }, 300);
+    Object.keys(showcases).forEach(function (key) {
+      showcases[key].style.opacity = '0';
+      setTimeout(function () { showcases[key].classList.add('hidden'); }, 300);
+    });
+  }
+
+  function showPanel(el) {
+    setTimeout(function () {
+      el.classList.remove('hidden');
+      requestAnimationFrame(function () { el.style.opacity = '1'; });
+    }, 310);
+  }
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var filter = btn.dataset.filter;
+
+      // Update button styles
+      buttons.forEach(function (b) {
+        b.classList.remove('bg-primary-container', 'text-on-primary-fixed');
+        b.classList.add('bg-surface-container-low', 'text-on-surface-variant', 'hover:text-white', 'transition-colors');
+      });
+      btn.classList.remove('bg-surface-container-low', 'text-on-surface-variant', 'hover:text-white', 'transition-colors');
+      btn.classList.add('bg-primary-container', 'text-on-primary-fixed');
+
+      // Hide everything first
+      hideAll();
+
+      if (filter === 'all') {
+        showPanel(productGrid);
+      } else if (showcases[filter]) {
+        showPanel(showcases[filter]);
+      }
+    });
+  });
+
+  // Set transition on all switchable panels
+  productGrid.style.transition = 'opacity 0.3s ease';
+  Object.keys(showcases).forEach(function (key) {
+    showcases[key].style.transition = 'opacity 0.3s ease';
+  });
+})();
+
+// Scroll reveal animation
+var revealObserver = new IntersectionObserver(function (entries) {
+  entries.forEach(function (entry) {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('revealed');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+var sections = document.querySelectorAll('main > section:not(:first-child)');
+sections.forEach(function (section) {
+  var contentEls = section.querySelectorAll(':scope > div:not(.absolute):not([class*="absolute"])');
+  contentEls.forEach(function (el) {
+    el.classList.add('scroll-reveal');
+    revealObserver.observe(el);
+  });
+});
+
+// Counter animation
+var counterObserver = new IntersectionObserver(function (entries) {
+  entries.forEach(function (entry) {
+    if (entry.isIntersecting) {
+      var el = entry.target;
+      var target = parseFloat(el.dataset.count);
+      var prefix = el.dataset.prefix || '';
+      var suffix = el.dataset.suffix || '';
+      var duration = 2000;
+      var start = performance.now();
+      var isDecimal = target % 1 !== 0;
+
+      function update(now) {
+        var progress = Math.min((now - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        var current = target * eased;
+        el.textContent = prefix + (isDecimal ? current.toFixed(1) : Math.round(current)) + suffix;
+        if (progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+      counterObserver.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('[data-count]').forEach(function (el) {
+  counterObserver.observe(el);
+});
+
+// Preloader
+document.body.classList.add('loading');
+
+var heroVideo = document.querySelector('main > section:first-child video');
+var preloader = document.getElementById('preloader');
+var bar = document.getElementById('preload-bar');
+var percent = document.getElementById('preload-percent');
+var status = document.getElementById('preload-status');
+
+var progress = 0;
+var progressInterval = setInterval(function () {
+  if (progress < 90) {
+    progress += Math.random() * 8;
+    progress = Math.min(progress, 90);
+    bar.style.width = progress + '%';
+    percent.textContent = Math.round(progress);
+  }
+}, 200);
+
+function dismissPreloader() {
+  clearInterval(progressInterval);
+  progress = 100;
+  bar.style.width = '100%';
+  percent.textContent = '100';
+  status.textContent = '\u2713';
+
+  setTimeout(function () {
+    preloader.style.transform = 'translateY(-100%)';
+    document.body.classList.remove('loading');
+    setTimeout(function () { preloader.remove(); }, 700);
+  }, 500);
+}
+
+if (heroVideo) {
+  if (heroVideo.readyState >= 3) {
+    setTimeout(dismissPreloader, 1500);
+  } else {
+    heroVideo.addEventListener('canplaythrough', function () {
+      dismissPreloader();
+    }, { once: true });
+  }
+  setTimeout(dismissPreloader, 8000);
+} else {
+  setTimeout(dismissPreloader, 1500);
+}
+</script>
+
+</body>
+</html>

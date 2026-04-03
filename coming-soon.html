@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html class="dark scroll-smooth" lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>準備中 | World</title>
+<!-- Favicon -->
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+<!-- Meta -->
+<meta name="description" content="このページは現在構築中です。株式会社3Sが提供するWorld次世代クラウド監視プラットフォーム。">
+<meta name="theme-color" content="#131313">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "secondary": "#b8c4ff",
+          "surface-tint": "#abd600",
+          "surface-variant": "#353535",
+          "on-secondary-fixed": "#001454",
+          "on-primary-fixed": "#161e00",
+          "on-tertiary-fixed": "#410000",
+          "outline-variant": "#444933",
+          "on-error": "#690005",
+          "on-primary": "#283500",
+          "secondary-fixed": "#dde1ff",
+          "on-primary-container": "#556d00",
+          "secondary-fixed-dim": "#b8c4ff",
+          "surface-container-lowest": "#0e0e0e",
+          "tertiary-fixed": "#ffdad4",
+          "outline": "#8e9379",
+          "inverse-primary": "#506600",
+          "surface": "#131313",
+          "tertiary-fixed-dim": "#ffb4a8",
+          "on-tertiary": "#690100",
+          "surface-dim": "#131313",
+          "on-secondary-container": "#d5daff",
+          "on-tertiary-fixed-variant": "#930100",
+          "error": "#ffb4ab",
+          "on-surface": "#e2e2e2",
+          "tertiary-container": "#ffdad4",
+          "primary-fixed-dim": "#abd600",
+          "on-background": "#e2e2e2",
+          "on-tertiary-container": "#cc0100",
+          "on-secondary": "#002486",
+          "surface-container-low": "#1b1b1b",
+          "inverse-on-surface": "#303030",
+          "error-container": "#93000a",
+          "secondary-container": "#004bf9",
+          "surface-container": "#1f1f1f",
+          "inverse-surface": "#e2e2e2",
+          "primary-fixed": "#c3f400",
+          "surface-bright": "#393939",
+          "tertiary": "#ffffff",
+          "on-surface-variant": "#c4c9ac",
+          "surface-container-high": "#2a2a2a",
+          "on-error-container": "#ffdad6",
+          "on-primary-fixed-variant": "#3c4d00",
+          "background": "#131313",
+          "primary": "#ffffff",
+          "primary-container": "#c3f400",
+          "surface-container-highest": "#353535",
+          "on-secondary-fixed-variant": "#0036bb"
+        },
+        fontFamily: {
+          "headline": ["Space Grotesk", "Noto Sans JP", "sans-serif"],
+          "body": ["Inter", "Noto Sans JP", "sans-serif"],
+          "label": ["Inter", "Noto Sans JP", "sans-serif"]
+        },
+        borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+      },
+    },
+  }
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+  }
+  /* HUD corner decorations — four corners via ::before/::after + helper divs */
+  .hud-frame { position: relative; }
+  .hud-frame::before,
+  .hud-frame::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-color: rgba(195, 244, 0, 0.4);
+    pointer-events: none;
+  }
+  .hud-corner-tr,
+  .hud-corner-bl {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-color: rgba(195, 244, 0, 0.4);
+    pointer-events: none;
+  }
+  .hud-frame::before { top: 0; left: 0; border-top: 2px solid; border-left: 2px solid; }
+  .hud-frame::after  { bottom: 0; right: 0; border-bottom: 2px solid; border-right: 2px solid; }
+  .hud-corner-tr     { top: 0; right: 0; border-top: 2px solid; border-right: 2px solid; }
+  .hud-corner-bl     { bottom: 0; left: 0; border-bottom: 2px solid; border-left: 2px solid; }
+
+  /* Pulsing progress bar */
+  @keyframes progressPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  @keyframes progressSweep {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+  }
+  .progress-bar-fill {
+    animation: progressPulse 2s ease-in-out infinite;
+  }
+  .progress-bar-sweep {
+    animation: progressSweep 2.5s ease-in-out infinite;
+  }
+
+  /* Scanline effect */
+  @keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100vh); }
+  }
+  .scanline {
+    animation: scanline 8s linear infinite;
+  }
+
+  /* Blinking cursor */
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+  .cursor-blink {
+    animation: blink 1s step-end infinite;
+  }
+
+  /* Subtle float for the HUD frame */
+  @keyframes hudFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  .hud-float {
+    animation: hudFloat 6s ease-in-out infinite;
+  }
+
+  h1, h2, h3, blockquote { letter-spacing: -0.05em; }
+  body { font-feature-settings: "palt"; }
+</style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+
+<!-- Nav -->
+<nav class="bg-surface/80 backdrop-blur-xl docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
+<a class="text-2xl font-black tracking-tighter text-white hover:text-primary-container transition-colors font-headline uppercase" href="index.html">World</a>
+<div class="hidden md:flex items-center space-x-8">
+<a class="font-headline font-bold tracking-tighter uppercase text-white/60 hover:text-white transition-colors" href="index.html#models">モデル</a>
+<a class="font-headline font-bold tracking-tighter uppercase text-white/60 hover:text-white transition-colors" href="index.html#environments">環境</a>
+<a class="font-headline font-bold tracking-tighter uppercase text-white/60 hover:text-white transition-colors" href="index.html#tech">テクノロジー</a>
+<a class="font-headline font-bold tracking-tighter uppercase text-white/60 hover:text-white transition-colors" href="index.html#support">サポート</a>
+</div>
+<div class="flex items-center space-x-6">
+<a href="index.html" class="material-symbols-outlined text-white/60 hover:text-white transition-all">home</a>
+<a href="coming-soon.html" class="bg-primary-container text-on-primary-container px-5 py-2 font-headline font-bold text-sm tracking-widest uppercase hover:scale-95 transition-all duration-100 inline-block">お問い合わせ</a>
+</div>
+</div>
+</nav>
+
+<!-- Main -->
+<main class="relative min-h-[calc(100vh-72px)] flex items-center justify-center overflow-hidden">
+
+<div class="absolute inset-0 z-0">
+<video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale scale-110">
+  <source src="coming-soon-bg.mp4" type="video/mp4">
+</video>
+<div class="absolute inset-0 bg-gradient-to-b from-surface/80 via-surface/60 to-surface/90"></div>
+<div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(195,244,0,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(195,244,0,0.3) 1px, transparent 1px); background-size: 60px 60px;"></div>
+<div class="absolute inset-0 pointer-events-none overflow-hidden">
+  <div class="scanline w-full h-[2px] bg-gradient-to-r from-transparent via-primary-container/10 to-transparent"></div>
+</div>
+</div>
+
+<div class="relative z-10 text-center px-6 max-w-2xl mx-auto">
+  <div class="hud-frame hud-float p-12 md:p-16">
+    <div class="hud-corner-tr"></div>
+    <div class="hud-corner-bl"></div>
+
+    <div class="flex items-center justify-center gap-2 mb-8">
+      <span class="w-2 h-2 bg-primary-container rounded-full animate-pulse"></span>
+      <span class="font-mono text-[0.6rem] tracking-[0.3em] text-primary-container uppercase">Status: Building</span>
+    </div>
+
+    <h1 class="font-headline font-black text-5xl md:text-7xl tracking-tighter text-white uppercase leading-[0.9] mb-6">
+      <span class="text-primary-container">準備</span>中
+    </h1>
+
+    <p class="text-on-surface-variant text-sm md:text-base leading-relaxed mb-10 max-w-md mx-auto">
+      このページは現在構築中です。<br class="hidden md:block">もうしばらくお待ちください。
+    </p>
+
+    <div class="w-full max-w-xs mx-auto mb-4">
+      <div class="h-[2px] bg-white/10 relative overflow-hidden">
+        <div class="progress-bar-fill absolute inset-y-0 left-0 w-3/5 bg-primary-container"></div>
+        <div class="progress-bar-sweep absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-transparent via-primary-container/60 to-transparent"></div>
+      </div>
+    </div>
+
+    <div class="font-mono text-[0.6rem] tracking-[0.25em] text-on-surface-variant/60 uppercase mb-10">
+      > ページを準備しています<span class="cursor-blink text-primary-container">_</span>
+    </div>
+
+    <a href="index.html"
+       class="inline-flex items-center gap-3 bg-primary-container text-on-primary-container px-8 py-4 font-headline font-bold text-sm tracking-widest uppercase hover:scale-95 transition-all duration-200 group">
+      <span class="material-symbols-outlined text-base transition-transform group-hover:-translate-x-1">arrow_back</span>
+      トップページへ戻る
+    </a>
+  </div>
+
+  <div class="mt-12 flex items-center justify-center gap-4">
+    <div class="h-[1px] w-12 bg-white/10"></div>
+    <span class="font-mono text-[0.5rem] tracking-[0.4em] text-white/20 uppercase">World Platform v2.0</span>
+    <div class="h-[1px] w-12 bg-white/10"></div>
+  </div>
+
+</div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-surface border-t border-white/5 py-8 px-6">
+<div class="max-w-screen-2xl mx-auto text-center">
+<p class="text-white/40 font-body text-[0.65rem] tracking-widest uppercase">
+  &copy;2025 株式会社3S. ALL RIGHTS RESERVED. POWERED BY WORLD PLATFORM.
+</p>
+</div>
+</footer>
+
+</body>
+</html>
