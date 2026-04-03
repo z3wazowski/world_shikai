@@ -748,6 +748,9 @@
 <a href="coming-soon.html" class="border border-white/20 text-white px-10 py-5 font-headline font-black text-lg uppercase tracking-tighter hover:bg-white hover:text-black transition-colors inline-block">
   資料ダウンロード
 </a>
+<a href="#" onclick="document.getElementById('applyOverlay').style.display='block'; document.body.style.overflow='hidden'; return false;" class="border border-white/20 text-white px-10 py-5 font-headline font-black text-lg uppercase tracking-tighter hover:bg-white hover:text-black transition-colors inline-block">
+  サービスを申し込む
+</a>
 </div>
 </div>
 </section>
@@ -951,6 +954,727 @@ if (heroVideo) {
 } else {
   setTimeout(dismissPreloader, 1500);
 }
+</script>
+
+
+<style>
+#applyOverlay {
+  --bg: #0a0a0a;
+  --bg2: #111111;
+  --bg3: #161616;
+  --border: #2a2a2a;
+  --border-active: rgb(195,244,0);
+  --green: rgb(195,244,0);
+  --green-dim: rgba(195,244,0,0.08);
+  --green-mid: rgba(195,244,0,0.35);
+  --text: #e8e8e8;
+  --text-dim: #888;
+  --text-muted: #444;
+  --mono: 'Share Tech Mono', monospace;
+  --sans: 'Noto Sans JP', sans-serif;
+  --red: #ff4444;
+}
+
+  
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 300;
+    min-height: 100vh;
+  }
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(rgba(195,244,0,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(195,244,0,0.025) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events:none; z-index:0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: fixed; top:0; left:0; right:0; height:56px;
+    background: rgba(10,10,10,0.96);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; z-index:100;
+    backdrop-filter: blur(12px);
+  }
+  .logo { font-family:var(--mono); font-size:18px; letter-spacing:.1em; }
+  .logo span { color:var(--green); }
+  .back-link {
+    font-family:var(--mono); font-size:11px; color:var(--text-dim);
+    text-decoration:none; letter-spacing:.12em;
+    display:flex; align-items:center; gap:8px;
+    transition:color .2s;
+  }
+  .back-link:hover { color:var(--green); }
+  .back-link::before { content:'←'; }
+
+  /* ── LAYOUT ── */
+  .page {
+    position:relative; z-index:1;
+    max-width:640px; margin:0 auto;
+    padding: 88px 24px 80px;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap {
+    margin-bottom: 40px;
+  }
+  .progress-meta {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom: 10px;
+  }
+  .progress-label {
+    font-family:var(--mono); font-size:10px; color:var(--text-muted);
+    letter-spacing:.15em;
+  }
+  .progress-step {
+    font-family:var(--mono); font-size:11px; color:var(--green);
+    letter-spacing:.1em;
+  }
+  .progress-bar-bg {
+    height: 2px; background: var(--border); position:relative;
+  }
+  .progress-bar-fill {
+    height:100%; background: var(--green);
+    transition: width .5s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 0 8px rgba(195,244,0,.5);
+  }
+  .step-dots {
+    display:flex; gap:0; margin-top:10px;
+  }
+  .step-dot {
+    flex:1; height:1px;
+    border-right: 1px solid var(--border);
+    position:relative;
+  }
+  .step-dot::after {
+    content:'';
+    position:absolute; top:-3px; right:-4px;
+    width:7px; height:7px;
+    background: var(--border);
+    border-radius:50%;
+    transition: background .3s;
+  }
+  .step-dot.done::after { background: var(--green); box-shadow: 0 0 6px rgba(195,244,0,.6); }
+  .step-dot.active::after { background: var(--green); animation: dotPulse 1.5s infinite; }
+  @keyframes dotPulse {
+    0%,100%{ box-shadow:0 0 0 0 rgba(195,244,0,.6); }
+    50%{ box-shadow:0 0 0 4px rgba(195,244,0,0); }
+  }
+
+  /* ── SECTION PANELS ── */
+  .section-panel { display:none; }
+  .section-panel.active {
+    display:block;
+    animation: panelIn .35s ease both;
+  }
+  @keyframes panelIn {
+    from { opacity:0; transform:translateY(16px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  .section-tag {
+    font-family:var(--mono); font-size:10px; color:var(--green);
+    letter-spacing:.2em; margin-bottom:10px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .section-tag::before { content:''; display:block; width:16px; height:1px; background:var(--green); }
+  .section-title {
+    font-size:22px; font-weight:700; letter-spacing:-.02em;
+    margin-bottom:8px; line-height:1.3;
+  }
+  .section-desc {
+    font-size:13px; color:var(--text-dim); line-height:1.8;
+    border-left:2px solid var(--green);
+    padding-left:14px; margin-bottom:32px;
+  }
+
+  /* ── FORM CARDS ── */
+  .form-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 22px 20px;
+    margin-bottom:10px;
+    position:relative;
+    transition: border-color .2s;
+  }
+  .form-card::before {
+    content:''; position:absolute; left:0; top:0; bottom:0;
+    width:2px; background:transparent; transition:background .2s;
+  }
+  .form-card:focus-within { border-color: var(--green-mid); }
+  .form-card:focus-within::before { background:var(--green); }
+
+  label.field-label {
+    display:block;
+    font-family:var(--mono); font-size:11px; letter-spacing:.1em;
+    color:var(--text-dim); text-transform:uppercase;
+    margin-bottom: 12px;
+  }
+  .req { color:var(--red); margin-left:3px; }
+
+  .hint {
+    font-family:var(--mono); font-size:10px; color:var(--text-muted);
+    letter-spacing:.05em; margin-bottom:10px;
+    padding-left:12px; border-left:1px solid var(--text-muted);
+  }
+
+  /* inputs */
+  input[type=text], input[type=email], input[type=tel], input[type=date] {
+    width:100%; background:var(--bg);
+    border:none; border-bottom: 1px solid var(--border);
+    color:var(--text); font-family:var(--mono); font-size:14px;
+    padding: 10px 4px; outline:none;
+    transition: border-color .2s;
+    -webkit-appearance:none; appearance:none;
+    letter-spacing:.04em;
+  }
+  input:focus { border-bottom-color: var(--green); }
+  input::placeholder { color:var(--text-muted); font-size:12px; }
+  input[type=date]::-webkit-calendar-picker-indicator { filter:invert(.4); }
+
+  /* radio options */
+  .radio-group { display:flex; flex-direction:column; gap:8px; }
+  .radio-opt {
+    display:flex; align-items:center; gap:12px;
+    padding:12px 14px;
+    background:var(--bg); border:1px solid var(--border);
+    cursor:pointer; transition:all .2s;
+  }
+  .radio-opt:hover { border-color:var(--green-mid); }
+  .radio-opt input[type=radio] { display:none; }
+  .r-dot {
+    width:15px; height:15px;
+    border:1px solid var(--text-muted); border-radius:50%;
+    flex-shrink:0; position:relative; transition:all .2s;
+  }
+  .r-dot::after {
+    content:''; position:absolute; inset:3px;
+    background:var(--green); border-radius:50%;
+    opacity:0; transition:opacity .2s;
+  }
+  .radio-opt:has(input:checked) { border-color:var(--green-mid); background:var(--green-dim); }
+  .radio-opt:has(input:checked) .r-dot { border-color:var(--green); }
+  .radio-opt:has(input:checked) .r-dot::after { opacity:1; }
+  .radio-opt:has(input:checked) .r-txt { color:var(--green); }
+  .r-txt { font-family:var(--mono); font-size:12px; color:var(--text); letter-spacing:.04em; transition:color .2s; }
+
+  /* number grid */
+  .num-grid {
+    display:grid; grid-template-columns:repeat(5,1fr); gap:6px;
+  }
+  .num-opt {
+    display:flex; align-items:center; justify-content:center;
+    padding:14px 0;
+    background:var(--bg); border:1px solid var(--border);
+    cursor:pointer; transition:all .2s;
+  }
+  .num-opt:hover { border-color:var(--green-mid); }
+  .num-opt input { display:none; }
+  .num-opt:has(input:checked) { border-color:var(--green); background:var(--green-dim); }
+  .num-opt:has(input:checked) .n-txt { color:var(--green); }
+  .n-txt { font-family:var(--mono); font-size:18px; color:var(--text-dim); transition:color .2s; }
+
+  /* checkbox */
+  .check-opt {
+    display:flex; align-items:flex-start; gap:12px;
+    cursor:pointer; margin-top:14px;
+  }
+  .check-opt input { display:none; }
+  .c-box {
+    width:17px; height:17px; flex-shrink:0;
+    border:1px solid var(--text-muted);
+    margin-top:1px; position:relative; transition:all .2s;
+  }
+  .c-box::after {
+    content:'✓'; position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; color:var(--green); opacity:0; transition:opacity .2s;
+  }
+  .check-opt:has(input:checked) .c-box { border-color:var(--green); background:var(--green-dim); }
+  .check-opt:has(input:checked) .c-box::after { opacity:1; }
+  .c-txt { font-family:var(--mono); font-size:12px; color:var(--text-dim); letter-spacing:.04em; line-height:1.5; }
+
+  /* terms */
+  .terms-link {
+    display:block; font-family:var(--mono); font-size:12px;
+    color:var(--green); text-decoration:none; letter-spacing:.04em;
+    margin-bottom:4px; opacity:.85; transition:opacity .2s;
+  }
+  .terms-link:hover { opacity:1; }
+  .terms-note {
+    font-family:var(--mono); font-size:10px; color:var(--text-muted);
+    letter-spacing:.04em; margin-top:10px;
+  }
+
+  /* notice */
+  .notice {
+    background:var(--bg3); border:1px solid var(--border);
+    border-left:2px solid var(--green);
+    padding:14px 18px; margin-bottom:20px;
+    font-family:var(--mono); font-size:11px;
+    color:var(--text-dim); line-height:2; letter-spacing:.05em;
+  }
+  .notice strong { color:var(--green); font-weight:normal; }
+
+  /* ── NAV BUTTONS ── */
+  .nav-btns {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-top:32px;
+  }
+  .btn {
+    font-family:var(--mono); font-size:11px; letter-spacing:.2em;
+    text-transform:uppercase; border:none; cursor:pointer;
+    padding:14px 36px; transition:all .2s;
+  }
+  .btn-next {
+    background:var(--green); color:#000;
+    position:relative; overflow:hidden;
+  }
+  .btn-next::before {
+    content:''; position:absolute; inset:0;
+    background:white; opacity:0; transition:opacity .2s;
+  }
+  .btn-next:hover::before { opacity:.08; }
+  .btn-back {
+    background:transparent; color:var(--text-dim);
+    border:1px solid var(--border);
+  }
+  .btn-back:hover { border-color:var(--green-mid); color:var(--text); }
+  .btn-submit {
+    background:var(--green); color:#000;
+    display:flex; align-items:center; gap:8px;
+  }
+  .btn-submit .dot {
+    width:6px; height:6px; border-radius:50%; background:#000;
+    animation:blink 1.5s infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+  /* ── COMPLETE ── */
+  .complete-wrap {
+    display:none; text-align:center; padding:40px 0;
+    animation: panelIn .4s ease both;
+  }
+  .complete-wrap.show { display:block; }
+  .complete-icon {
+    width:64px; height:64px; border-radius:50%;
+    border:2px solid var(--green);
+    display:flex; align-items:center; justify-content:center;
+    font-size:28px; margin:0 auto 24px;
+    box-shadow: 0 0 20px rgba(0,230,118,.3);
+    animation: iconIn .5s .2s ease both;
+  }
+  @keyframes iconIn {
+    from{ transform:scale(.5); opacity:0; }
+    to{ transform:scale(1); opacity:1; }
+  }
+  .complete-title {
+    font-family:var(--mono); font-size:18px; color:var(--green);
+    letter-spacing:.1em; margin-bottom:12px;
+  }
+  .complete-msg {
+    font-size:13px; color:var(--text-dim); line-height:1.9;
+  }
+
+  @media(max-width:600px){
+    header { padding:0 20px; }
+    .page { padding:76px 16px 60px; }
+    .num-grid { grid-template-columns:repeat(5,1fr); }
+  }
+
+</style>
+
+<!-- ============================================================
+     APPLY FORM OVERLAY
+     ============================================================ -->
+<div id="applyOverlay" style="display:none; position:fixed; inset:0; z-index:9998; overflow-y:auto; background:#0a0a0a;">
+
+
+<header>
+  <div class="logo">W<span>.</span>ORLD</div>
+  <a href="#" onclick="document.getElementById('applyOverlay').style.display='none'; document.body.style.overflow=''; return false;" class="back-link">サービスページへ戻る</a>
+</header>
+
+<div class="page">
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span class="progress-label">APPLICATION_FORM</span>
+      <span class="progress-step" id="stepLabel">STEP 01 / 04</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill" style="width:25%"></div>
+    </div>
+    <div class="step-dots">
+      <div class="step-dot active" id="dot0"></div>
+      <div class="step-dot" id="dot1"></div>
+      <div class="step-dot" id="dot2"></div>
+      <div class="step-dot" id="dot3"></div>
+    </div>
+  </div>
+
+  <!-- ===== SECTION 1 ===== -->
+  <div class="section-panel active" id="sec0">
+    <div class="section-tag">SECTION_01</div>
+    <div class="section-title">クラウド録画サービス<br>「WORLD」申込</div>
+    <div class="section-desc">
+      こちらのフォームからクラウド録画サービス「WORLD」のお申込みができます。<br>
+      継続利用・利用停止につきましても、こちらのフォームより受け付けておりますのでご利用下さい。
+    </div>
+
+    <div class="form-card">
+      <label class="field-label">申込サービス<span class="req">*</span></label>
+      <div class="radio-group">
+        <label class="radio-opt">
+          <input type="radio" name="service" value="cloud">
+          <span class="r-dot"></span>
+          <span class="r-txt">クラウド録画サービス「WORLD」</span>
+        </label>
+        <label class="radio-opt">
+          <input type="radio" name="service" value="rental">
+          <span class="r-dot"></span>
+          <span class="r-txt">クラウド録画サービス「WORLD」（レンタル）</span>
+        </label>
+        <label class="radio-opt">
+          <input type="radio" name="service" value="free">
+          <span class="r-dot"></span>
+          <span class="r-txt">クラウド録画サービス「WORLD」（レンタル無料貸出）</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <label class="field-label" for="company">会社名<span class="req">*</span></label>
+      <input type="text" id="company" placeholder="株式会社〇〇">
+    </div>
+
+    <div class="form-card">
+      <label class="field-label" for="name">ご担当者 氏名<span class="req">*</span></label>
+      <input type="text" id="name" placeholder="山田 太郎">
+    </div>
+
+    <div class="form-card">
+      <label class="field-label" for="email">メールアドレス<span class="req">*</span></label>
+      <input type="email" id="email" placeholder="example@company.co.jp">
+    </div>
+
+    <div class="form-card">
+      <label class="field-label" for="tel">ご連絡先 電話番号<span class="req">*</span></label>
+      <input type="tel" id="tel" placeholder="03-0000-0000">
+    </div>
+
+    <div class="nav-btns">
+      <span></span>
+      <button class="btn btn-next" onclick="nextStep(0)">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ===== SECTION 2 ===== -->
+  <div class="section-panel" id="sec1">
+    <div class="section-tag">SECTION_02</div>
+    <div class="section-title">利用規約への同意</div>
+    <div class="section-desc">
+      サービスをご利用いただく前に、必ず下記の規約をご確認ください。
+    </div>
+
+    <div class="form-card">
+      <a href="#" class="terms-link">▶ WORLDサービス利用規約</a>
+      <a href="#" class="terms-link">▶ プライバシーポリシー</a>
+      <div class="terms-note">※必ず上記規約に同意のうえ「次へ」ボタンを押してください。</div>
+      <label class="check-opt">
+        <input type="checkbox" id="agree1">
+        <span class="c-box"></span>
+        <span class="c-txt">同意する</span>
+      </label>
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn btn-back" onclick="prevStep(1)">← 戻る</button>
+      <button class="btn btn-next" onclick="nextStep(1)">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ===== SECTION 3 ===== -->
+  <div class="section-panel" id="sec2">
+    <div class="section-tag">SECTION_03</div>
+    <div class="section-title">レンタル申込 詳細</div>
+    <div class="section-desc">
+      レンタルサービスをお申込みの方は以下の情報をご記入ください。<br>
+      ※クラウド録画サービス「WORLD」のみのお申込みの方はスキップできます。
+    </div>
+
+    <div class="form-card">
+      <label class="field-label" for="start-date">利用開始希望月<span class="req">*</span></label>
+      <div class="hint">> 7営業日以内に発送可能。毎月1日からのご利用となります。</div>
+      <input type="date" id="start-date">
+    </div>
+
+    <div class="form-card">
+      <label class="field-label" for="end-date">終了月<span class="req">*</span></label>
+      <div class="hint">> 日割りの払い戻しはありません。月末までに3S社へお送りいただきます。</div>
+      <input type="date" id="end-date">
+    </div>
+
+    <div class="form-card">
+      <label class="field-label">利用希望台数<span class="req">*</span></label>
+      <div class="num-grid">
+        <label class="num-opt"><input type="radio" name="units" value="1"><span class="n-txt">1</span></label>
+        <label class="num-opt"><input type="radio" name="units" value="2"><span class="n-txt">2</span></label>
+        <label class="num-opt"><input type="radio" name="units" value="3"><span class="n-txt">3</span></label>
+        <label class="num-opt"><input type="radio" name="units" value="4"><span class="n-txt">4</span></label>
+        <label class="num-opt"><input type="radio" name="units" value="5"><span class="n-txt">5</span></label>
+        <label class="num-opt"><input type="radio" name="units" value="6"><span class="n-txt">6</span></label>
+        <label class="num-opt"><input type="radio" name="units" value="7"><span class="n-txt">7</span></label>
+        <label class="num-opt"><input type="radio" name="units" value="8"><span class="n-txt">8</span></label>
+        <label class="num-opt"><input type="radio" name="units" value="9"><span class="n-txt">9</span></label>
+        <label class="num-opt"><input type="radio" name="units" value="10"><span class="n-txt">10</span></label>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <label class="field-label" for="address">機材配送先 郵便番号・住所<span class="req">*</span></label>
+      <input type="text" id="address" placeholder="〒000-0000 東京都〇〇区〇〇 1-2-3">
+    </div>
+
+    <div class="form-card">
+      <label class="field-label" for="delivery-tel">機材配送先 確認電話番号<span class="req">*</span></label>
+      <input type="tel" id="delivery-tel" placeholder="03-0000-0000">
+    </div>
+
+    <div class="form-card">
+      <label class="field-label" for="receiver">受取者 氏名<span class="req">*</span></label>
+      <input type="text" id="receiver" placeholder="山田 太郎">
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn btn-back" onclick="prevStep(2)">← 戻る</button>
+      <button class="btn btn-next" onclick="nextStep(2)">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ===== SECTION 4 ===== -->
+  <div class="section-panel" id="sec3">
+    <div class="section-tag">SECTION_04</div>
+    <div class="section-title">規約同意 &amp; 送信</div>
+    <div class="section-desc">
+      最後に規約へのご同意を確認し、申込内容を送信してください。
+    </div>
+
+    <div class="notice">
+      <strong>// レンタル無料貸出 — 貸出条件</strong><br>
+      台数：1台<br>
+      最大貸出期間：1か月
+    </div>
+
+    <div class="form-card">
+      <label class="field-label" for="free-address">機材配送先 郵便番号・住所<span class="req">*</span></label>
+      <input type="text" id="free-address" placeholder="〒000-0000 東京都〇〇区〇〇 1-2-3">
+    </div>
+
+    <div class="form-card">
+      <label class="field-label" for="free-tel">機材配送先 確認電話番号<span class="req">*</span></label>
+      <input type="tel" id="free-tel" placeholder="03-0000-0000">
+    </div>
+
+    <div class="form-card">
+      <label class="field-label" for="free-receiver">受取者 氏名<span class="req">*</span></label>
+      <input type="text" id="free-receiver" placeholder="山田 太郎">
+    </div>
+
+    <div class="form-card">
+      <a href="#" class="terms-link">▶ WORLDサービス利用規約</a>
+      <a href="#" class="terms-link">▶ レンタルサービス利用規約</a>
+      <a href="#" class="terms-link">▶ プライバシーポリシー</a>
+      <div class="terms-note">※必ず上記規約に同意のうえ「送信」ボタンを押してください。</div>
+      <label class="check-opt">
+        <input type="checkbox" id="agree3">
+        <span class="c-box"></span>
+        <span class="c-txt">同意する</span>
+      </label>
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn btn-back" onclick="prevStep(3)">← 戻る</button>
+      <button class="btn btn-next btn-submit" onclick="submitForm()">
+        <span class="dot"></span> 送信する
+      </button>
+    </div>
+  </div>
+
+  <!-- COMPLETE -->
+  <div class="complete-wrap" id="complete">
+    <div class="complete-icon">✓</div>
+    <div class="complete-title">// SUBMITTED</div>
+    <p class="complete-msg">
+      お申込みを受け付けました。<br>
+      担当者より折り返しご連絡いたします。<br><br>
+      <span style="color:var(--text-muted);font-family:var(--mono);font-size:11px;">WORLD // 株式会社3S</span>
+    </p>
+  </div>
+
+</div>
+
+
+</div>
+
+<script>
+
+  const TOTAL = 4;
+  let current = 0;
+
+  function updateProgress(step) {
+    const pct = ((step + 1) / TOTAL) * 100;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('stepLabel').textContent =
+      'STEP ' + String(step + 1).padStart(2,'0') + ' / ' + String(TOTAL).padStart(2,'0');
+    for (let i = 0; i < TOTAL; i++) {
+      const dot = document.getElementById('dot' + i);
+      dot.className = 'step-dot' + (i < step ? ' done' : i === step ? ' active' : '');
+    }
+  }
+
+  function showSection(idx) {
+    document.querySelectorAll('.section-panel').forEach((p, i) => {
+      p.classList.toggle('active', i === idx);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    updateProgress(idx);
+  }
+
+  // エラー表示
+  function showError(el, msg) {
+    clearError(el);
+    el.style.borderBottomColor = 'var(--red)';
+    const err = document.createElement('div');
+    err.className = 'field-error';
+    err.textContent = msg;
+    err.style.cssText = 'color:var(--red);font-family:var(--mono);font-size:10px;letter-spacing:.05em;margin-top:6px;';
+    el.parentNode.appendChild(err);
+  }
+  function showCardError(card, msg) {
+    card.querySelectorAll('.field-error').forEach(e => e.remove());
+    const err = document.createElement('div');
+    err.className = 'field-error';
+    err.textContent = msg;
+    err.style.cssText = 'color:var(--red);font-family:var(--mono);font-size:10px;letter-spacing:.05em;margin-top:8px;';
+    card.appendChild(err);
+  }
+  function clearError(el) {
+    el.style.borderBottomColor = '';
+    const prev = el.parentNode.querySelector('.field-error');
+    if (prev) prev.remove();
+  }
+
+  // セクションごとのバリデーション
+  function validateSection(idx) {
+    let ok = true;
+
+    if (idx === 0) {
+      // 申込サービス
+      const serviceCard = document.querySelector('[name=service]').closest('.form-card');
+      serviceCard.querySelectorAll('.field-error').forEach(e => e.remove());
+      if (!document.querySelector('[name=service]:checked')) {
+        showCardError(serviceCard, '> 申込サービスを選択してください');
+        ok = false;
+      }
+      // テキスト系
+      const fields = [
+        { id: 'company',  msg: '> 会社名を入力してください' },
+        { id: 'name',     msg: '> 担当者氏名を入力してください' },
+        { id: 'email',    msg: '> メールアドレスを入力してください' },
+        { id: 'tel',      msg: '> 電話番号を入力してください' },
+      ];
+      fields.forEach(f => {
+        const el = document.getElementById(f.id);
+        clearError(el);
+        if (!el.value.trim()) { showError(el, f.msg); ok = false; }
+      });
+    }
+
+    if (idx === 1) {
+      const cb = document.getElementById('agree1');
+      const card = cb.closest('.form-card');
+      card.querySelectorAll('.field-error').forEach(e => e.remove());
+      if (!cb.checked) { showCardError(card, '> 規約に同意してください'); ok = false; }
+    }
+
+    if (idx === 2) {
+      const fields = [
+        { id: 'start-date',   msg: '> 利用開始希望月を入力してください' },
+        { id: 'end-date',     msg: '> 終了月を入力してください' },
+        { id: 'address',      msg: '> 配送先住所を入力してください' },
+        { id: 'delivery-tel', msg: '> 配送先電話番号を入力してください' },
+        { id: 'receiver',     msg: '> 受取者氏名を入力してください' },
+      ];
+      fields.forEach(f => {
+        const el = document.getElementById(f.id);
+        clearError(el);
+        if (!el.value.trim()) { showError(el, f.msg); ok = false; }
+      });
+      // 台数
+      const unitsCard = document.querySelector('[name=units]').closest('.form-card');
+      unitsCard.querySelectorAll('.field-error').forEach(e => e.remove());
+      if (!document.querySelector('[name=units]:checked')) {
+        showCardError(unitsCard, '> 利用希望台数を選択してください'); ok = false;
+      }
+    }
+
+    if (idx === 3) {
+      const fields = [
+        { id: 'free-address',  msg: '> 配送先住所を入力してください' },
+        { id: 'free-tel',      msg: '> 配送先電話番号を入力してください' },
+        { id: 'free-receiver', msg: '> 受取者氏名を入力してください' },
+      ];
+      fields.forEach(f => {
+        const el = document.getElementById(f.id);
+        clearError(el);
+        if (!el.value.trim()) { showError(el, f.msg); ok = false; }
+      });
+      const cb3 = document.getElementById('agree3');
+      const card3 = cb3.closest('.form-card');
+      card3.querySelectorAll('.field-error').forEach(e => e.remove());
+      if (!cb3.checked) { showCardError(card3, '> 規約に同意してください'); ok = false; }
+    }
+
+    return ok;
+  }
+
+  function nextStep(from) {
+    if (!validateSection(from)) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    current = from + 1;
+    if (current >= TOTAL) return;
+    showSection(current);
+  }
+
+  function prevStep(from) {
+    current = from - 1;
+    if (current < 0) return;
+    showSection(current);
+  }
+
+  function submitForm() {
+    if (!validateSection(3)) return;
+    document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('complete').classList.add('show');
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('stepLabel').textContent = 'COMPLETE';
+    for (let i = 0; i < TOTAL; i++) {
+      document.getElementById('dot' + i).className = 'step-dot done';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
 </script>
 
 </body>
