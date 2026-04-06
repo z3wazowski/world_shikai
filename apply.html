@@ -316,12 +316,76 @@
   function goBack() { showSection('sec0'); }
   function doSubmit(service) {
     if(!validateStep2(service)) return;
-    document.querySelectorAll('.section-panel').forEach(p=>p.classList.remove('active'));
+    function doSubmit(service) {
+  if (!validateStep2(service)) return;
+
+  // 共通フィールド
+  const fullName = document.getElementById('name').value.trim();
+  const nameParts = fullName.split(/\s+/);
+  const lastName  = nameParts[0] ?? fullName;
+  const firstName = nameParts.slice(1).join(' ') ?? '';
+
+  const serviceMap = {
+    cloud:  'クラウド録画サービス「WORLD」',
+    rental: 'クラウド録画サービス「WORLD」（レンタル）',
+    free:   'クラウド録画サービス「WORLD」（レンタル無料貸出）',
+  };
+
+  // レンタル系の追加情報をメッセージに含める
+  let extraMessage = '';
+  if (service === 'rental') {
+    const units     = document.querySelector('[name=units]:checked')?.value ?? '';
+    const startDate = document.getElementById('start-date').value;
+    const endDate   = document.getElementById('end-date').value;
+    const address   = document.getElementById('r-address').value.trim();
+    const receiver  = document.getElementById('r-receiver').value.trim();
+    extraMessage = `利用開始: ${startDate} / 終了: ${endDate} / 台数: ${units}台 / 配送先: ${address} / 受取者: ${receiver}`;
+  }
+  if (service === 'free') {
+    const address  = document.getElementById('f-address').value.trim();
+    const receiver = document.getElementById('f-receiver').value.trim();
+    extraMessage = `配送先: ${address} / 受取者: ${receiver}`;
+  }
+
+  // 送信ボタンを無効化
+  const btn = document.querySelector(`#sec_${service} .btn-submit`);
+  if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
+
+  fetch('https://chatwork.cvr-world.com/api/contact-inquiries', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      form_type:            1,
+      last_name:            lastName,
+      first_name:           firstName,
+      email:                document.getElementById('email').value.trim(),
+      company_name:         document.getElementById('company').value.trim(),
+      phone_number:         document.getElementById('tel').value.trim(),
+      property_type:        serviceMap[service] ?? service,
+      unit_count_estimate:  null,
+      inquiry_items:        ['インターネットの設置'],
+      message:              extraMessage || serviceMap[service],
+    }),
+  })
+  .then((res) => {
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return res.json();
+  })
+  .then(() => {
+    // 完了画面を表示
+    document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
     document.getElementById('complete').classList.add('show');
-    document.getElementById('progressFill').style.width='100%';
-    document.getElementById('stepLabel').textContent='COMPLETE';
-    document.getElementById('stepDots').querySelectorAll('.step-dot').forEach(d=>{d.className='step-dot done';});
-    window.scrollTo({top:0,behavior:'smooth'});
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('stepLabel').textContent = 'COMPLETE';
+    document.getElementById('stepDots').querySelectorAll('.step-dot').forEach(d => { d.className = 'step-dot done'; });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  })
+  .catch((err) => {
+    console.error('送信エラー:', err);
+    alert('送信に失敗しました。時間をおいて再度お試しください。');
+    if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+  });
+}
   }
 
   updateProgress(1,2);
