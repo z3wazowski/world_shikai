@@ -315,6 +315,13 @@
   }
   function goBack() { showSection('sec0'); }
 
+  function generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0;
+      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+  }
+
   function doSubmit(service) {
     if (!validateStep2(service)) return;
 
@@ -361,7 +368,9 @@
         unit_count_estimate:  null,
         inquiry_items:        ['インターネットの設置'],
         message:              extraMessage || serviceMap[service],
-        agreed:               1,
+        consent_agreed:       1,
+        consent_policy_version: '2026-04-01',
+        session_id:           generateUUID(),
       }),
     })
     .then((res) => {
